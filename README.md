@@ -24,8 +24,9 @@ And then run the update vendors script:
 Register the namespace like so:
 
 ```php
-<?php
 # app/autoload.php
+
+<?php
 
 $loader->registerNamespaces( array(
   //...
@@ -41,6 +42,7 @@ Add it to your AppKernel (this example assumes that CacheBundle is located in sr
 # app/AppKernel.php
 
 <?php
+
     $bundles = array(
         //...
         new Beryllium\CacheBundle\BerylliumCacheBundle(),
