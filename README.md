@@ -28,6 +28,20 @@ And then you should be good to go:
 
 You might want to set up a service alias, since "$this->get( 'beryllium_cache' )" might be a bit long.
 
+# The Command Line #
+
+For a command line report of CacheClient statistics (assuming the cache client has a ->getStats method, which is not an interface requirement), you can do the following:
+
+    app/console cacheclient:stats
+
+Or, for extended information (the raw stats array), you can run with debugging enabled:
+
+    app/console cacheclient:stats --debug
+
+Help is available, although brief:
+
+    app/console help cacheclient:stats
+
 # The Future #
 Currently there aren't any unit or functional tests. So that needs to be worked on.
 
