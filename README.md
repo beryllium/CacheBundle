@@ -51,7 +51,7 @@ Add it to your AppKernel (this example assumes that CacheBundle is located in sr
 
 Configure your server list in parameters.ini:
 
-    beryllium_memcache.servers["127.0.0.1"] = 11211 
+    beryllium_cache.client.servers["127.0.0.1"] = 11211 
 
 And then you should be good to go:
   
