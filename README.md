@@ -11,13 +11,13 @@ The groundwork is also laid out for building alternate cache interfaces quickly 
 
 Add this to your deps file:
 
-   [BerylliumCacheBundle]
-       git=http://github.com/beryllium/CacheBundle.git
-       target=/bundles/Beryllium/CacheBundle
+    [BerylliumCacheBundle]
+        git=http://github.com/beryllium/CacheBundle.git
+        target=/bundles/Beryllium/CacheBundle
 
 And then run the update vendors script:
 
-   bin/vendors install
+    bin/vendors install
 
 ### Step 2: Configure autoload.php
 
@@ -84,6 +84,8 @@ Beyond that, who knows what the future might hold.
 
 ## Additional Resources
 
-MySQL InnoDB+Memcached API: http://blogs.innodb.com/wp/2011/04/get-started-with-innodb-memcached-daemon-plugin/
+MySQL InnoDB+Memcached API: 
+- http://blogs.innodb.com/wp/2011/04/get-started-with-innodb-memcached-daemon-plugin/
 
-Amazon ElastiCache: http://aws.amazon.com/elasticache/
+Amazon ElastiCache: 
+- http://aws.amazon.com/elasticache/
