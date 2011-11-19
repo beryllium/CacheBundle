@@ -1,21 +1,51 @@
-# BerylliumCacheBundle for Symfony2 #
+BerylliumCacheBundle for Symfony2
+=================================
 
-It's memcache. You've seen it before. Now it's injectable to the DIC, and you don't have to write all this junk yourself.
-
-Of course, if you need it, you probably already have. And if you have, you've probably done it in a better way.
-
-Ah well. Maybe this will help a few people, maybe it won't, who knows - I'm just in it for the fame and fortune, really. ;-)
+It's memcache. You've seen it before. Now it's injectable to the DIC, and you don't have to write all this junk yourself. And it should also work with Amazon ElasticCache, as well as the MySQL Memcache Interface (new in MySQL 5.6).
 
 The groundwork is also laid out for building alternate cache interfaces quickly - such as APC caching, or your own home-rolled filesystem cache.
 
-# Configuration #
+## Configuration
+
+### Step 1: Fetching
+
+Add this to your deps file:
+
+   [BerylliumCacheBundle]
+       git=http://github.com/beryllium/CacheBundle.git
+       target=/bundles/Beryllium/CacheBundle
+
+And then run the update vendors script:
+
+   bin/vendors install
+
+### Step 2: Configure autoload.php
+
+Register the namespace like so:
+
+```php
+<?php
+# app/autoload.php
+
+$loader->registerNamespaces( array(
+  //...
+  'Beryllium' => __DIR__.'/../vendor/bundles',
+  ) );
+```
+
+### Step 3: Configure the AppKernel
 
 Add it to your AppKernel (this example assumes that CacheBundle is located in src/Beryllium/CacheBundle):
 
+```php
+# app/AppKernel.php
+
+<?php
     $bundles = array(
         //...
         new Beryllium\CacheBundle\BerylliumCacheBundle(),
     );
+```
 
 Configure your server list in parameters.ini:
 
@@ -28,7 +58,7 @@ And then you should be good to go:
 
 You might want to set up a service alias, since "$this->get( 'beryllium_cache' )" might be a bit long.
 
-# The Command Line #
+## The Command Line
 
 For a command line report of CacheClient statistics (assuming the cache client has a ->getStats method, which is not an interface requirement), you can do the following:
 
@@ -42,11 +72,18 @@ Help is available, although brief:
 
     app/console help cacheclient:stats
 
-# The Future #
+## The Future 
+
 Currently there aren't any unit or functional tests. So that needs to be worked on.
 
 More cache client implementations could be useful, if it turns out there's a demand for them.
 
-And yes, the documentation needs to be more thorough as well. For example, there ought to be documentation on how to add it to the deps file and have it placed in the Vendor folder instead of Src.
+And yes, the documentation needs to be more thorough as well. I've made some improvements, but it's still spotty at best.
 
-Beyond that, who knows :)
+Beyond that, who knows what the future might hold.
+
+## Additional Resources
+
+MySQL InnoDB+Memcached API: http://blogs.innodb.com/wp/2011/04/get-started-with-innodb-memcached-daemon-plugin/
+
+Amazon ElastiCache: http://aws.amazon.com/elasticache/
