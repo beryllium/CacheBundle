@@ -66,6 +66,18 @@ For a command line report of CacheClient statistics (assuming the cache client h
 
     app/console cacheclient:stats
 
+Example Output:
+<pre>
+Servers found: 1
+
+Host:    127.0.0.1:11211
+	Usage: 0% (0.01MB of 64MB)
+	Uptime: 344976 seconds (3 days, 23 hours, 49 minutes, 36 seconds)
+	Open Connections: 15
+	Hits: 26
+	Misses: 29
+	Helpfulness: 47.27%
+</pre>
 Or, for extended information (the raw stats array), you can run with debugging enabled:
 
     app/console cacheclient:stats --debug
