@@ -87,7 +87,9 @@ Beyond that, who knows what the future might hold.
 ## Additional Resources
 
 MySQL InnoDB+Memcached API: 
-- http://blogs.innodb.com/wp/2011/04/get-started-with-innodb-memcached-daemon-plugin/
+
+* http://blogs.innodb.com/wp/2011/04/get-started-with-innodb-memcached-daemon-plugin/
 
 Amazon ElastiCache: 
-- http://aws.amazon.com/elasticache/
+
+* http://aws.amazon.com/elasticache/
