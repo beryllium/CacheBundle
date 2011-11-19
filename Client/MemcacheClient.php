@@ -186,4 +186,16 @@ class MemcacheClient implements CacheClientInterface
 	{
 		return $this->safe;
 	}
+
+  /**
+   * getStats returns the result of Memcache::getExtendedStats(), an associative array
+   * containing arrays of server stats
+   * 
+   * @access public
+   * @return array Server stats array
+   */
+  public function getStats()
+  {
+    return $this->mem->getExtendedStats();
+  }
 }
