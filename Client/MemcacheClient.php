@@ -15,8 +15,6 @@ use Beryllium\CacheBundle\CacheClientInterface;
  */
 class MemcacheClient implements CacheClientInterface
 {
-	public $dic = null;
-
 	protected $safe = false;
 	protected $mem = null;
 	protected $servers = array();
@@ -24,32 +22,14 @@ class MemcacheClient implements CacheClientInterface
 	protected $compression = false;
 
 	/**
-	 * Checks for the existence of the Memcache extension, and instantiates an internal Memcache instance
-	 * if it exists (throws an exception if the extension is not found).
+   * Constructs the cache client using an injected Memcache instance
 	 * 
 	 * @access public
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct( \Memcache $memcache )
 	{
-		if ( !class_exists( 'Memcache' ) )
-		{
-			throw new \Exception( 'Memcache Is Not Installed' );
-		}
-
-		$this->mem = new \Memcache();
-	}
-
-	/**
-	 * Inject a dependency injection container
-	 * 
-	 * @param mixed $dic 
-	 * @access public
-	 * @return void
-	 */
-	public function setContainer( $dic )
-	{
-		$this->dic = $dic;
+        $this->mem = $memcache;
 	}
 
 	/**
