@@ -1,0 +1,24 @@
+{
+  "name": "Beryllium/CacheBundle",
+  "description": "Provides an interface to Memcache for Symfony2 applications",
+  "keywords": ["memcache","cache"],
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": 
+  [
+    { 
+      "name": "Kevin Boyd (aka Beryllium)",
+      "homepage": "http://www.beryllium.ca/"
+    }
+  ],
+  "require": 
+  {
+      "php": ">=5.3.0",
+      "symfony/framework-bundle": "2.*"
+  },
+  "autoload": 
+  {
+    "psr-0": { "Beryllium\\CacheBundle": "" }
+  },
+  "target-dir": "Beryllium/CacheBundle"
+}
