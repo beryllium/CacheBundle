@@ -91,7 +91,8 @@ class CacheClientStatsCommand extends ContainerAwareCommand
        $out .= "\tOpen Connections: " . $item[ 'curr_connections' ] . "\n";
        $out .= "\tHits: " . $item[ 'get_hits' ] . "\n";
        $out .= "\tMisses: " . $item[ 'get_misses' ] . "\n";
-       $out .= "\tHelpfulness: " . round( $item[ 'get_hits' ] / ( $item[ 'get_hits' ] + $item[ 'get_misses' ] ) * 100, 2 ) . "%\n";
+       if ( $item[ 'get_hits' ] + $item[ 'get_misses' ] > 0 )
+         $out .= "\tHelpfulness: " . round( $item[ 'get_hits' ] / ( $item[ 'get_hits' ] + $item[ 'get_misses' ] ) * 100, 2 ) . "%\n";
 
        if ( $debug )
        {
