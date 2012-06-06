@@ -79,6 +79,10 @@ class MemcacheClient implements CacheClientInterface
 
 		foreach ( $servers as $ip=>$port )
 		{
+			if ( !is_int( $port ))
+			{
+				$port = NULL;
+			}
 			if ( $this->probeServer( $ip, $port ) )
 			{
 				$status = $this->addServer( $ip, $port );
