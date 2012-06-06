@@ -6,11 +6,11 @@ use Beryllium\CacheBundle\CacheClientInterface;
 
 /**
  * Client interface for Memcache servers
- * 
+ *
  * @uses CacheClientInterface
- * @package 
+ * @package
  * @version $id$
- * @author Kevin Boyd <beryllium@beryllium.ca> 
+ * @author Kevin Boyd <beryllium@beryllium.ca>
  * @license See LICENSE.md
  */
 class MemcacheClient implements CacheClientInterface
@@ -23,7 +23,7 @@ class MemcacheClient implements CacheClientInterface
 
 	/**
    * Constructs the cache client using an injected Memcache instance
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
@@ -38,7 +38,7 @@ class MemcacheClient implements CacheClientInterface
 	 * Does not probe server, does not set Safe to true.
 	 *
 	 * Should really be private, or modified to handle the probeServer action itself.
-	 * 
+	 *
 	 * @param string $ip Location of memcache server
 	 * @param int $port Optional: Port number (default: 11211)
 	 * @access public
@@ -72,14 +72,14 @@ class MemcacheClient implements CacheClientInterface
 	 */
 	public function addServers( array $servers )
 	{
-		if ( count( $servers ) == 0 ) 
+		if ( count( $servers ) == 0 )
 		{
 			return false;
 		}
 
 		foreach ( $servers as $ip=>$port )
 		{
-			if ( !is_int( $port ))
+			if ( intval( $port ) == 0 )
 			{
 				$port = NULL;
 			}
@@ -97,7 +97,7 @@ class MemcacheClient implements CacheClientInterface
 	 * The purpose of this is to verify that the server exists before trying to add it,
 	 * to cut down on weird errors when doing ->get(). This could be a controversial or
 	 * flawed way to go about this.
-	 * 
+	 *
 	 * @param string $ip IP address (or hostname, possibly)
 	 * @param int $port Port that memcache is running on
 	 * @access public
@@ -122,8 +122,8 @@ class MemcacheClient implements CacheClientInterface
 
 	/**
 	 * Retrieve a value from memcache
-	 * 
-	 * @param string $key Unique identifier 
+	 *
+	 * @param string $key Unique identifier
 	 * @access public
 	 * @return mixed Requested value, or false if an error occurs
 	 */
@@ -141,8 +141,8 @@ class MemcacheClient implements CacheClientInterface
 
 	/**
 	 * Add a value to the memcache
-	 * 
-	 * @param string $key Unique key 
+	 *
+	 * @param string $key Unique key
 	 * @param mixed $value A value. I recommend a string, be it serialized or not - other values haven't been tested :)
 	 * @param int $ttl Number of seconds for the value to be valid for
 	 * @access public
@@ -162,7 +162,7 @@ class MemcacheClient implements CacheClientInterface
 
 	/**
 	 * Check if the cache is live
-	 * 
+	 *
 	 * @access public
 	 * @return True if a valid server has been added, otherwise false
 	 */
@@ -174,7 +174,7 @@ class MemcacheClient implements CacheClientInterface
   /**
    * getStats returns the result of Memcache::getExtendedStats(), an associative array
    * containing arrays of server stats
-   * 
+   *
    * @access public
    * @return array Server stats array
    */
