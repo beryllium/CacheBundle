@@ -11,7 +11,12 @@ The groundwork is also laid out for building alternate cache interfaces quickly 
 
 ### Step 1: Fetching
 
-Add this to your deps file:
+If you are using composer, you probably only need to add this to your composer.json file:
+    "require": {
+      "Beryllium/CacheBundle": "dev-master"
+    },
+
+If you aren't using composer, add this to your deps file:
 
     [BerylliumCacheBundle]
         git=http://github.com/beryllium/CacheBundle.git
@@ -23,7 +28,7 @@ And then run the update vendors script:
 
 ### Step 2: Configure autoload.php
 
-Register the namespace like so:
+If you aren't using Composer, register the namespace like so:
 
 ```php
 # app/autoload.php
@@ -38,7 +43,7 @@ $loader->registerNamespaces( array(
 
 ### Step 3: Configure the AppKernel
 
-Add it to your AppKernel (this example assumes that CacheBundle is located in src/Beryllium/CacheBundle):
+Add it to your AppKernel:
 
 ```php
 # app/AppKernel.php
@@ -54,6 +59,9 @@ Add it to your AppKernel (this example assumes that CacheBundle is located in sr
 Configure your server list in parameters.ini:
 
     beryllium_cache.client.servers["127.0.0.1"] = 11211 
+
+If you plan on using local UNIX sockets, GitHub user gierschv has contributed the ability to do this:
+    beryllium_cache.client.servers["unix:///tmp/mc.sock"]=""
 
 And then you should be good to go:
   
