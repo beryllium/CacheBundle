@@ -44,6 +44,7 @@ class FilecacheClient implements ClientCacheInterface
 			return false;
 		}
 
+    //@todo Implement multi-get
 		if ( file_exists( $this->buildFilename( $key ) )
 		{
 			$file = file_get_contents( $this->buildFilename( $key ) );

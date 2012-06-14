@@ -73,7 +73,7 @@ class Cache implements CacheInterface
 	/**
 	 * Retrieve a value from the cache using the provided key
 	 * 
-	 * @param string $key The unique key identifying the data to be retrieved.
+	 * @param string|array $key The unique key or array of keys identifying the data to be retrieved.
 	 * @access public
 	 * @return mixed The requested data, or false if there is an error
 	 */

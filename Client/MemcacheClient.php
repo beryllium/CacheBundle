@@ -122,8 +122,8 @@ class MemcacheClient implements CacheClientInterface
 
 	/**
 	 * Retrieve a value from memcache
-	 *
-	 * @param string $key Unique identifier
+	 * 
+	 * @param string|array $key Unique identifier or array of identifiers
 	 * @access public
 	 * @return mixed Requested value, or false if an error occurs
 	 */

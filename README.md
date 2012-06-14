@@ -3,6 +3,8 @@ BerylliumCacheBundle for Symfony2
 
 It's memcache. You've seen it before. Now it's injectable to the DIC, and you don't have to write all this junk yourself. And it should also work with Amazon ElasticCache, as well as the MySQL Memcache Interface (new in MySQL 5.6).
 
+Another advantage over just using a raw memcache object is that BCB probes servers before adding them to the pool - if a server is down, your site won't be gravely impacted by the Memcache class waiting and waiting and waiting for a response.
+
 The groundwork is also laid out for building alternate cache interfaces quickly - such as APC caching, or your own home-rolled filesystem cache.
 
 ## Configuration
