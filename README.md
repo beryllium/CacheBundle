@@ -12,6 +12,7 @@ The groundwork is also laid out for building alternate cache interfaces quickly 
 ### Step 1: Fetching
 
 If you are using composer, you probably only need to add this to your composer.json file:
+
     "require": {
       "Beryllium/CacheBundle": "dev-master"
     },
@@ -61,6 +62,7 @@ Configure your server list in parameters.ini:
     beryllium_cache.client.servers["127.0.0.1"] = 11211 
 
 If you plan on using local UNIX sockets, GitHub user gierschv has contributed the ability to do this:
+
     beryllium_cache.client.servers["unix:///tmp/mc.sock"]=""
 
 And then you should be good to go:
