@@ -32,6 +32,15 @@ interface CacheClientInterface
 	 */
 	public function set( $key, $value, $ttl );
 
+  /**
+   * Delete a value from the cache
+   * 
+   * @param string $key 
+   * @access public
+   * @return void
+   */
+  public function delete( $key );
+
 	/**
 	 * Check the state of the cache
 	 * 

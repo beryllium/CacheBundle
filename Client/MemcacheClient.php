@@ -160,6 +160,25 @@ class MemcacheClient implements CacheClientInterface
 		}
 	}
 
+  /**
+   * Delete a value from the memcache
+   * 
+   * @param string $key Unique key
+   * @access public
+   * @return void
+   */
+  public function delete( $key )
+  {
+    if ( $this->isSafe() )
+    {
+      return $this->mem->delete( $key, 0 );
+    }
+    else
+    {
+      return false;
+    }
+  }
+
 	/**
 	 * Check if the cache is live
 	 *

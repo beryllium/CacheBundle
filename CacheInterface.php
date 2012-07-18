@@ -17,5 +17,6 @@ interface CacheInterface
 	public function __construct( CacheClientInterface $client = null );
 	public function get( $key );
 	public function set( $key, $value, $ttl );
+  public function delete( $key );
 	public function isSafe();
 }

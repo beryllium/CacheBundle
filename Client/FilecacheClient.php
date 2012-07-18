@@ -93,6 +93,16 @@ class FilecacheClient implements ClientCacheInterface
 		}
 	}
 
+  public function delete( $key )
+  {
+    $filename = $this->buildFilename( $key );
+
+    if ( file_exists( $filename ) )
+    {
+      unlink( $filename );
+    }
+  }
+
 	public function setPath( $path )
 	{
 		if ( !empty( $path ) && is_dir( $path ) && is_writable( $path ) )

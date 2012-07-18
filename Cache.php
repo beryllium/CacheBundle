@@ -106,6 +106,23 @@ class Cache implements CacheInterface
 		return false;
 	}
 
+  /**
+   * Delete a key from the cache
+   * 
+   * @param string $key Unique key
+   * @access public
+   * @return void
+   */
+  public function delete( $key )
+  {
+		if ( $this->isSafe() && !empty( $key ) )
+		{
+			return $this->client->delete( $key );
+		}
+
+		return false;
+  }
+
 	/**
 	 * Checks if the cache is in a usable state
 	 * 
