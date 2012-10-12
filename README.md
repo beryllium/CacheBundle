@@ -11,38 +11,13 @@ The groundwork is also laid out for building alternate cache interfaces quickly 
 
 ### Step 1: Fetching
 
-If you are using composer, you probably only need to add this to your composer.json file:
+Using composer:
 
     "require": {
-      "Beryllium/CacheBundle": "dev-master"
+      "beryllium/cache-bundle": "v0.2.*-dev"
     },
 
-If you aren't using composer, add this to your deps file:
-
-    [BerylliumCacheBundle]
-        git=http://github.com/beryllium/CacheBundle.git
-        target=/bundles/Beryllium/CacheBundle
-
-And then run the update vendors script:
-
-    bin/vendors install
-
-### Step 2: Configure autoload.php
-
-If you aren't using Composer, register the namespace like so:
-
-```php
-# app/autoload.php
-
-<?php
-
-$loader->registerNamespaces( array(
-  //...
-  'Beryllium' => __DIR__.'/../vendor/bundles',
-  ) );
-```
-
-### Step 3: Configure the AppKernel
+### Step 2: Configure the AppKernel
 
 Add it to your AppKernel:
 
@@ -56,6 +31,10 @@ Add it to your AppKernel:
         new Beryllium\CacheBundle\BerylliumCacheBundle(),
     );
 ```
+
+### Step 3: Configure the Bundle
+
+(This section is pending a rewrite; the configuration system for this bundle needs to be rewritten so that it can be set up in config.yml)
 
 Configure your server list in parameters.ini:
 
