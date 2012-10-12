@@ -1,7 +1,7 @@
 {
-  "name": "Beryllium/CacheBundle",
+  "name": "beryllium/cache-bundle",
   "description": "Provides an interface to Memcache for Symfony2 applications",
-  "keywords": ["memcache","cache"],
+  "keywords": ["memcache","cache","memcached"],
   "type": "symfony-bundle",
   "license": "MIT",
   "authors": 
