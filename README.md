@@ -61,6 +61,12 @@ Configure your server list in parameters.ini:
 
     beryllium_cache.client.servers["127.0.0.1"] = 11211 
 
+Or for parameters.yml:
+
+    parameters:
+        ...
+        beryllium_cache.client.servers: { "localhost": 11211 }
+
 If you plan on using local UNIX sockets, GitHub user gierschv has contributed the ability to do this:
 
     beryllium_cache.client.servers["unix:///tmp/mc.sock"]=""
