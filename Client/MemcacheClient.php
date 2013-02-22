@@ -107,7 +107,7 @@ class MemcacheClient implements CacheClientInterface
 	{
 		$errno = null;
 		$errstr = null;
-		$fp = fsockopen( $ip, $port, $errno, $errstr, $this->sockttl );
+		$fp = @fsockopen( $ip, $port, $errno, $errstr, $this->sockttl );
 
 		if ( $fp )
 		{
