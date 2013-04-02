@@ -14,9 +14,33 @@ use Beryllium\CacheBundle\CacheClientInterface;
  */
 interface CacheInterface
 {
-	public function __construct( CacheClientInterface $client = null );
-	public function get( $key );
-	public function set( $key, $value, $ttl );
-  public function delete( $key );
-	public function isSafe();
+    /**
+     * @param CacheClientInterface $client
+     */
+    public function __construct(CacheClientInterface $client = null);
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function get($key);
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param int $ttl
+     * @return mixed
+     */
+    public function set($key, $value, $ttl);
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function delete($key);
+
+    /**
+     * @return bool
+     */
+    public function isSafe();
 }
