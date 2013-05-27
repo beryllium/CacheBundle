@@ -27,10 +27,9 @@ class MemcacheClient implements CacheClientInterface
      *
      * @access public
      */
-    public function __construct(\Memcache $memcache, $prefix)
+    public function __construct(\Memcache $memcache)
     {
         $this->mem = $memcache;
-        $this->prefix = $prefix;
     }
 
     /**
@@ -189,5 +188,13 @@ class MemcacheClient implements CacheClientInterface
     public function getStats()
     {
         return $this->mem->getExtendedStats();
+    }
+
+    /**
+     * @param string $prefix
+     */
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
     }
 }
