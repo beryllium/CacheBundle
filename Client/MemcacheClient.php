@@ -20,15 +20,17 @@ class MemcacheClient implements CacheClientInterface
     protected $servers = array();
     protected $sockttl = 0.2;
     protected $compression = false;
+    protected $prefix = '';
 
     /**
      * Constructs the cache client using an injected Memcache instance
      *
      * @access public
      */
-    public function __construct(\Memcache $memcache)
+    public function __construct(\Memcache $memcache, $prefix)
     {
         $this->mem = $memcache;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -123,6 +125,7 @@ class MemcacheClient implements CacheClientInterface
     public function get($key)
     {
         if ($this->isSafe()) {
+            $key = $this->prefix . $key;
             return $this->mem->get($key);
         }
 
@@ -141,6 +144,7 @@ class MemcacheClient implements CacheClientInterface
     public function set($key, $value, $ttl)
     {
         if ($this->isSafe()) {
+            $key = $this->prefix . $key;
             return $this->mem->set($key, $value, $this->compression, $ttl);
         }
 
@@ -157,6 +161,7 @@ class MemcacheClient implements CacheClientInterface
     public function delete($key)
     {
         if ($this->isSafe()) {
+            $key = $this->prefix . $key;
             return $this->mem->delete($key, 0);
         }
 
