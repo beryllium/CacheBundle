@@ -14,7 +14,7 @@ The groundwork is also laid out for building alternate cache interfaces quickly 
 Using composer:
 
     "require": {
-      "beryllium/cache-bundle": "v0.2.*-dev"
+      "beryllium/cachebundle": "v0.2.*-dev"
     },
 
 ### Step 2: Configure the AppKernel
