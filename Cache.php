@@ -20,6 +20,7 @@ class Cache implements CacheInterface
 
     protected $client = null;
     protected $safe = false;
+    protected $ttl = 300;
 
     /**
      * Prep the cache
@@ -50,6 +51,18 @@ class Cache implements CacheInterface
     public function setContainer($dic)
     {
         $this->dic = $dic;
+    }
+
+    /**
+     * Change the default lifetime of the data (default: 300 seconds - five minutes)
+     *
+     * @param int $ttl
+     * @access public
+     * @return void
+     */
+    public function setTtl($ttl)
+    {
+        $this->ttl = $ttl;
     }
 
     /**
@@ -89,12 +102,14 @@ class Cache implements CacheInterface
      *
      * @param string $key A unique key to identify the data you want to store
      * @param string $value The value you want to store in the cache
-     * @param int $ttl Optional: Lifetime of the data (default: 300 seconds - five minutes)
+     * @param int $ttl Optional: Lifetime of the data
      * @access public
      * @return mixed Whatever the CacheClientObject returns, or false.
      */
-    public function set($key, $value, $ttl = 300)
+    public function set($key, $value, $ttl = null)
     {
+        $ttl = (null !== $ttl) ? $ttl : $this->ttl;
+
         if ($this->isSafe() && !empty($key)) {
             return $this->client->set($key, $value, $ttl);
         }
