@@ -59,7 +59,7 @@ Add it to your AppKernel:
 
 Configure your server list in parameters.ini:
 
-    beryllium_cache.client.servers["127.0.0.1"] = 11211 
+    beryllium_cache.client.servers["127.0.0.1"] = 11211
 
 Or for parameters.yml:
 
@@ -67,12 +67,20 @@ Or for parameters.yml:
         ...
         beryllium_cache.client.servers: { "localhost": 11211 }
 
+If you want to change the default cache TTL value (300 seconds) you can
+add this to your parameters.yml:
+
+    parameters:
+        ...
+        beryllium_cache.default_ttl: 86400
+
+
 If you plan on using local UNIX sockets, GitHub user gierschv has contributed the ability to do this:
 
     beryllium_cache.client.servers["unix:///tmp/mc.sock"]=""
 
 And then you should be good to go:
-  
+
     $this->get( 'beryllium_cache' )->set( 'key', 'value', $ttl );
     $this->get( 'beryllium_cache' )->get( 'key' );
 
@@ -104,7 +112,7 @@ Help is available, although brief:
 
     app/console help cacheclient:stats
 
-## The Future 
+## The Future
 
 Currently there aren't any unit or functional tests. So that needs to be worked on.
 
@@ -116,10 +124,10 @@ Beyond that, who knows what the future might hold.
 
 ## Additional Resources
 
-MySQL InnoDB+Memcached API: 
+MySQL InnoDB+Memcached API:
 
 * http://blogs.innodb.com/wp/2011/04/get-started-with-innodb-memcached-daemon-plugin/
 
-Amazon ElastiCache: 
+Amazon ElastiCache:
 
 * http://aws.amazon.com/elasticache/

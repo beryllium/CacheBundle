@@ -4,9 +4,10 @@ parameters:
     beryllium_cache.client.memcache.class: Memcache
     beryllium_cache.client.servers: { 127.0.0.1 : 11211 }
     beryllium_cache.client.prefix: ''
+    beryllium_cache.default_ttl: 300
 
 services:
-    beryllium_cache.client.memcache: 
+    beryllium_cache.client.memcache:
       class: %beryllium_cache.client.memcache.class%
     beryllium_cache.client:
       class: %beryllium_cache.client.class%
@@ -19,3 +20,4 @@ services:
         calls:
           - [ setContainer, [ @service_container ] ]
           - [ setClient, [ @beryllium_cache.client ] ]
+          - [ setTtl, [ %beryllium_cache.default_ttl% ] ]
