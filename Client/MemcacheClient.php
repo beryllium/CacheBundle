@@ -125,7 +125,7 @@ class MemcacheClient implements CacheClientInterface
     {
         if ($this->isSafe()) {
             $key = $this->prefix . $key;
-            return $this->mem->get($key);
+            return $this->mem->get($key, $this->compression);
         }
 
         return false;
@@ -196,5 +196,15 @@ class MemcacheClient implements CacheClientInterface
     public function setPrefix($prefix)
     {
         $this->prefix = $prefix;
+    }
+    
+    /**
+     * Set the Memcache compression flag for sets/gets
+     * 
+     * @param int $flag
+     */
+    public function setCompression($flag)
+    {
+        $this->compression = $flag;
     }
 }
