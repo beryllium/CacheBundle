@@ -1,89 +1,79 @@
 <?php
 
 namespace Beryllium\CacheBundle\Client;
-
-use Beryllium\CacheBundle\CacheClientInterface;
+use Beryllium\CacheBundle\Statistics;
 
 /**
  * Client interface for Memcache servers
  *
- * @uses CacheClientInterface
+ * @uses CacheInterface
  * @package
  * @version $id$
  * @author Kevin Boyd <beryllium@beryllium.ca>
  * @license See LICENSE.md
  */
-class MemcacheClient implements CacheClientInterface
+class MemcacheClient implements CacheInterface, StatsInterface
 {
     protected $safe = false;
+    /** @var \Memcache|null Memcache instance */
     protected $mem = null;
     protected $servers = array();
     protected $sockttl = 0.2;
     protected $compression = false;
-    protected $prefix = '';
+    protected $prefix = "";
 
     /**
      * Constructs the cache client using an injected Memcache instance
      *
      * @access public
      */
-    public function __construct(\Memcache $memcache)
+    public function __construct($ip, $port)
     {
-        $this->mem = $memcache;
+        //Default memcache instance
+        $this->mem = new \Memcache();
+        $this->addServer($ip, $port);
     }
 
     /**
      * Add a server to the memcache pool.
      *
-     * Does not probe server, does not set Safe to true.
-     *
      * Should really be private, or modified to handle the probeServer action itself.
      *
      * @param string $ip Location of memcache server
      * @param int $port Optional: Port number (default: 11211)
-     * @access public
-     * @return void
+     * @return boolean
      */
     public function addServer($ip, $port = 11211)
     {
-        if (is_object($this->mem)) {
-            return $this->mem->addServer($ip, $port);
+        if (!is_object($this->mem) || !$this->probeServer($ip, $port)) {
+            return false;
         }
+        
+        $status = $this->mem->addServer($ip, $port);
+        if ($status) {
+            $this->safe = true;
+        }
+
+        return $status;
     }
 
     /**
      * Add an array of servers to the memcache pool
      *
-     * Uses ProbeServer to verify that the connection is valid.
-     *
      * Format of array:
      *
-     *   $servers[ '127.0.0.1' ] = 11211;
-     *
-     * Logic is somewhat flawed, of course, because it wouldn't let you add multiple
-     * servers on the same IP.
-     *
-     * Serious flaw, right? ;-)
+     *   $servers[] = [
+     *      "ip"    => "127.0.0.1",
+     *      "port"  => 11211
+     *   ];
      *
      * @param array $servers See above format definition
-     * @access public
      * @return void
      */
     public function addServers(array $servers)
     {
-        if (count($servers) == 0) {
-            return false;
-        }
-
-        foreach ($servers as $ip => $port) {
-            if (intval($port) == 0) {
-                $port = null;
-            }
-
-            if ($this->probeServer($ip, $port)) {
-                $status = $this->addServer($ip, $port);
-                $this->safe = true;
-            }
+        foreach ($servers as $server) {
+            $this->addServer($server["ip"], $server["port"]);
         }
     }
 
@@ -96,7 +86,6 @@ class MemcacheClient implements CacheClientInterface
      *
      * @param string $ip IP address (or hostname, possibly)
      * @param int $port Port that memcache is running on
-     * @access public
      * @return boolean True if the socket opens successfully, or false if it fails
      */
     public function probeServer($ip, $port)
@@ -118,14 +107,12 @@ class MemcacheClient implements CacheClientInterface
      * Retrieve a value from memcache
      *
      * @param string|array $key Unique identifier or array of identifiers
-     * @access public
      * @return mixed Requested value, or false if an error occurs
      */
     public function get($key)
     {
         if ($this->isSafe()) {
-            $key = $this->prefix . $key;
-            return $this->mem->get($key);
+            return $this->mem->get($this->getKey($key));
         }
 
         return false;
@@ -137,14 +124,12 @@ class MemcacheClient implements CacheClientInterface
      * @param string $key Unique key
      * @param mixed $value A value. I recommend a string, be it serialized or not - other values haven't been tested :)
      * @param int $ttl Number of seconds for the value to be valid for
-     * @access public
-     * @return void
+     * @return boolean
      */
     public function set($key, $value, $ttl)
     {
         if ($this->isSafe()) {
-            $key = $this->prefix . $key;
-            return $this->mem->set($key, $value, $this->compression, $ttl);
+            return $this->mem->set($this->getKey($key), $value, $this->compression, $ttl);
         }
 
         return false;
@@ -154,14 +139,12 @@ class MemcacheClient implements CacheClientInterface
      * Delete a value from the memcache
      *
      * @param string $key Unique key
-     * @access public
-     * @return void
+     * @return boolean
      */
     public function delete($key)
     {
         if ($this->isSafe()) {
-            $key = $this->prefix . $key;
-            return $this->mem->delete($key, 0);
+            return $this->mem->delete($this->getKey($key), 0);
         }
 
         return false;
@@ -179,15 +162,27 @@ class MemcacheClient implements CacheClientInterface
     }
 
     /**
-     * getStats returns the result of Memcache::getExtendedStats(), an associative array
-     * containing arrays of server stats
+     * Returns array of stats for every instance of caching backend available
      *
-     * @access public
-     * @return array Server stats array
+     * @return Statistics[]
      */
     public function getStats()
     {
-        return $this->mem->getExtendedStats();
+        $result = array();
+
+        if (!$this->isSafe()) {
+            return $result;
+        }
+        foreach ($this->mem->getExtendedStats() as $key => $stat_array) {
+            $stats = new Statistics($stat_array["get_hits"], $stat_array["get_misses"]);
+            $stats->setAdditionalData(array(
+                "Open connections"  => $stat_array["curr_connections"],
+                "Uptime"            => $stat_array["uptime"]
+            ));
+            $result[$key] = $stats;
+        }
+
+        return $result;
     }
 
     /**
@@ -196,5 +191,9 @@ class MemcacheClient implements CacheClientInterface
     public function setPrefix($prefix)
     {
         $this->prefix = $prefix;
+    }
+
+    private function getKey($key) {
+        return $this->prefix . $key;
     }
 }

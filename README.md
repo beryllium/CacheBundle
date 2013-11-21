@@ -14,7 +14,7 @@ The groundwork is also laid out for building alternate cache interfaces quickly 
 If you are using composer, you probably only need to add this to your composer.json file:
 
     "require": {
-      "Beryllium/CacheBundle": "dev-master"
+      "beryllium/cache-bundle": "dev-master"
     },
 
 If you aren't using composer, add this to your deps file:
@@ -53,60 +53,67 @@ Add it to your AppKernel:
 
     $bundles = array(
         //...
-        new Beryllium\CacheBundle\BerylliumCacheBundle(),
+        new Beryllium\CacheBundle\BeCacheBundle(),
     );
 ```
 
-Configure your server list in parameters.ini:
+### Default configuration
 
-    beryllium_cache.client.servers["127.0.0.1"] = 11211
-
-Or for parameters.yml:
-
+```yml
+be_cache:
+    client:         filecache
+    ttl:            300
     parameters:
-        ...
-        beryllium_cache.client.servers: { "localhost": 11211 }
+        memcache:
+            ip:     127.0.0.1
+            port:   11211
+        filecache:
+            path:   "%kernel.cache_dir%/apc"
+    debug:          %kernel.debug%
+```
 
-If you want to change the default cache TTL value (300 seconds) you can
-add this to your parameters.yml:
 
+If you plan on using local UNIX sockets, @gierschv has contributed the ability to do this:
+
+```yml
+be_cache:
+    client:     memcache
     parameters:
-        ...
-        beryllium_cache.default_ttl: 86400
+        memcache:
+            ip:     "unix:///tmp/mc.sock"
+            port:   ""
+```
 
+### Usage
 
-If you plan on using local UNIX sockets, GitHub user gierschv has contributed the ability to do this:
+After all this steps you should be good to go:
 
-    beryllium_cache.client.servers["unix:///tmp/mc.sock"]=""
+    $this->get('be_cache')->set('key', 'value', $ttl);
+    $this->get('be_cache')->get('key');
 
-And then you should be good to go:
+### Available backends
 
-    $this->get( 'beryllium_cache' )->set( 'key', 'value', $ttl );
-    $this->get( 'beryllium_cache' )->get( 'key' );
-
-You might want to set up a service alias, since "$this->get( 'beryllium_cache' )" might be a bit long.
+    * APC
+    * Memcache
+    * File system
 
 ## The Command Line
 
-For a command line report of CacheClient statistics (assuming the cache client has a ->getStats method, which is not an interface requirement), you can do the following:
+For a command line report of CacheClient statistics (assuming the cache client implements StatsInterface), you can do the following:
 
     app/console cacheclient:stats
 
 Example Output:
 <pre>
-Servers found: 1
-
-Host:    127.0.0.1:11211
-	Usage: 0% (0.01MB of 64MB)
-	Uptime: 344976 seconds (3 days, 23 hours, 49 minutes, 36 seconds)
-	Open Connections: 15
-	Hits: 26
-	Misses: 29
-	Helpfulness: 47.27%
+Instance: APC
+ -------------- ------- 
+  Hits:          26      
+  Misses:        29      
+  Helpfulness:   47.27%  
+  Uptime: 344976 seconds
+  Open connections: 10
+ -------------- ------- 
 </pre>
-Or, for extended information (the raw stats array), you can run with debugging enabled:
-
-    app/console cacheclient:stats --debug
 
 Help is available, although brief:
 
