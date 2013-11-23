@@ -1,0 +1,22 @@
+parameters:
+    be_cache.client:          ~
+    be_cache.ttl:             ~
+    be_cache.debug:           ~
+    be_cache.memcache.ip:     ~
+    be_cache.memcache.port:   ~
+    be_cache.filecache.path:  ~
+
+services:
+    be_cache.client.memcache:
+      class: Beryllium\CacheBundle\Client\MemcacheClient
+      arguments: [%be_cache.memcache.ip%, %be_cache.memcache.port%]
+    be_cache.client.filecache:
+      class: Beryllium\CacheBundle\Client\FilecacheClient
+      arguments: [%be_cache.filecache.path%]
+    be_cache.client.apc:
+      class: Beryllium\CacheBundle\Client\APCClient
+    be_cache:
+      class: Beryllium\CacheBundle\Cache
+      calls:
+        - [setTtl, [%be_cache.ttl%]]
+        - [setDebug, [%be_cache.debug%]]
