@@ -1,6 +1,7 @@
 <?php
 
 namespace Beryllium\CacheBundle\Client;
+
 use Beryllium\CacheBundle\Statistics;
 
 /**
@@ -14,13 +15,16 @@ use Beryllium\CacheBundle\Statistics;
  */
 class MemcacheClient implements CacheInterface, StatsInterface
 {
-    protected $safe = false;
-    /** @var \Memcache|null Memcache instance */
+    /**
+     * @var \Memcache|null Memcache instance
+     */
     protected $mem = null;
+
+    protected $safe = false;
     protected $servers = array();
     protected $sockttl = 0.2;
     protected $compression = false;
-    protected $prefix = "";
+    protected $prefix = '';
 
     /**
      * Constructs the cache client using an injected Memcache instance
@@ -29,7 +33,7 @@ class MemcacheClient implements CacheInterface, StatsInterface
      */
     public function __construct($ip, $port)
     {
-        //Default memcache instance
+        // Default memcache instance
         $this->mem = new \Memcache();
         $this->addServer($ip, $port);
     }
@@ -48,9 +52,8 @@ class MemcacheClient implements CacheInterface, StatsInterface
         if (!is_object($this->mem) || !$this->probeServer($ip, $port)) {
             return false;
         }
-        
-        $status = $this->mem->addServer($ip, $port);
-        if ($status) {
+
+        if ($status = $this->mem->addServer($ip, $port)) {
             $this->safe = true;
         }
 
@@ -63,8 +66,8 @@ class MemcacheClient implements CacheInterface, StatsInterface
      * Format of array:
      *
      *   $servers[] = [
-     *      "ip"    => "127.0.0.1",
-     *      "port"  => 11211
+     *      'ip'    => '127.0.0.1',
+     *      'port'  => 11211
      *   ];
      *
      * @param array $servers See above format definition
@@ -73,7 +76,7 @@ class MemcacheClient implements CacheInterface, StatsInterface
     public function addServers(array $servers)
     {
         foreach ($servers as $server) {
-            $this->addServer($server["ip"], $server["port"]);
+            $this->addServer($server['ip'], $server['port']);
         }
     }
 
@@ -98,9 +101,9 @@ class MemcacheClient implements CacheInterface, StatsInterface
             fclose($fp);
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -173,12 +176,16 @@ class MemcacheClient implements CacheInterface, StatsInterface
         if (!$this->isSafe()) {
             return $result;
         }
+
         foreach ($this->mem->getExtendedStats() as $key => $stat_array) {
-            $stats = new Statistics($stat_array["get_hits"], $stat_array["get_misses"]);
-            $stats->setAdditionalData(array(
-                "Open connections"  => $stat_array["curr_connections"],
-                "Uptime"            => $stat_array["uptime"]
-            ));
+            $stats = new Statistics($stat_array['get_hits'], $stat_array['get_misses']);
+            $stats->setAdditionalData(
+                array(
+                    'Open connections' => $stat_array['curr_connections'],
+                    'Uptime' => $stat_array['uptime']
+                )
+            );
+
             $result[$key] = $stats;
         }
 
@@ -193,7 +200,12 @@ class MemcacheClient implements CacheInterface, StatsInterface
         $this->prefix = $prefix;
     }
 
-    private function getKey($key) {
+    /**
+     * @param $key
+     * @return string
+     */
+    private function getKey($key)
+    {
         return $this->prefix . $key;
     }
 }

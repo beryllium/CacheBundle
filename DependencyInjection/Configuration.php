@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
                             ->arrayNode('filecache')
                                 ->addDefaultsIfNotSet()
                                 ->children()
-                                    ->scalarNode('path')->defaultValue("%kernel.cache_dir%/apc")->end()
+                                    ->scalarNode('path')->defaultValue('%kernel.cache_dir%/apc')->end()
                                 ->end()
                             ->end()
                         ->end()

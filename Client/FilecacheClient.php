@@ -50,6 +50,7 @@ class FilecacheClient implements CacheInterface, StatsInterface
         // @todo Implement multi-get
         if (!file_exists($this->buildFilename($key))) {
             $this->misses++;
+
             return false;
         }
 
@@ -57,13 +58,15 @@ class FilecacheClient implements CacheInterface, StatsInterface
 
         if (!is_array($file) || $file['key'] != $key) {
             $this->misses++;
+
             return false;
         }
 
         if ($file['ttl'] != 0 && time() - $file['ctime'] > $file['ttl']) {
-            //If key is expired, then delete file
+            // If key is expired, then delete file
             $this->misses++;
             $this->delete($key);
+
             return false;
         }
 
@@ -105,6 +108,7 @@ class FilecacheClient implements CacheInterface, StatsInterface
 
         if (file_exists($filename)) {
             unlink($filename);
+
             return true;
         }
 
@@ -121,10 +125,8 @@ class FilecacheClient implements CacheInterface, StatsInterface
             return false;
         }
 
-        if (!is_dir($path)) {
-            if (!mkdir($path)) {
-                return false;
-            }
+        if (!is_dir($path) && !mkdir($path)) {
+            return false;
         }
 
         if (!is_writable($path)) {
@@ -132,8 +134,8 @@ class FilecacheClient implements CacheInterface, StatsInterface
         }
 
         $this->path = $path;
-        if (substr($path, -1) !== "/") {
-            $this->path = $path . "/";
+        if (substr($path, -1) !== '/') {
+            $this->path = $path . '/';
         }
 
         return true;
@@ -162,8 +164,8 @@ class FilecacheClient implements CacheInterface, StatsInterface
     protected function dumpStats()
     {
         $stats = array(
-            "hits" => $this->hits,
-            "misses" => $this->misses
+            'hits' => $this->hits,
+            'misses' => $this->misses
         );
 
         file_put_contents($this->buildStatsFilename(), serialize($stats));
@@ -175,8 +177,8 @@ class FilecacheClient implements CacheInterface, StatsInterface
     protected function restoreStats()
     {
         $stats = unserialize(file_get_contents($this->buildStatsFilename()));
-        $this->hits = $stats["hits"];
-        $this->misses = $stats["misses"];
+        $this->hits = $stats['hits'];
+        $this->misses = $stats['misses'];
     }
 
     protected function buildStatsFilename()
@@ -193,6 +195,6 @@ class FilecacheClient implements CacheInterface, StatsInterface
             return false;
         }
 
-        return array("File cache" => new Statistics($this->hits, $this->misses));
+        return array('File cache' => new Statistics($this->hits, $this->misses));
     }
 }

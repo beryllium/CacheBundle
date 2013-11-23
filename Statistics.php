@@ -10,7 +10,8 @@ namespace Beryllium\CacheBundle;
  * @author Yaroslav Nechaev <mail@remper.ru>
  * @license See LICENSE.md
  */
-class Statistics {
+class Statistics
+{
     protected $hits;
     protected $misses;
     protected $additional;
@@ -21,7 +22,8 @@ class Statistics {
      * @param $hits
      * @param $misses
      */
-    public function __construct($hits, $misses) {
+    public function __construct($hits, $misses)
+    {
         $this->hits = $hits;
         $this->misses = $misses;
         $this->additional = array();
@@ -32,7 +34,8 @@ class Statistics {
      *
      * @return int
      */
-    public function getHits() {
+    public function getHits()
+    {
         return $this->hits;
     }
 
@@ -41,7 +44,8 @@ class Statistics {
      *
      * @return int
      */
-    public function getMisses() {
+    public function getMisses()
+    {
         return $this->misses;
     }
 
@@ -50,12 +54,13 @@ class Statistics {
      *
      * @return string
      */
-    public function getHelpfulness() {
+    public function getHelpfulness()
+    {
         if ($this->hits + $this->misses == 0) {
-            return "0.00%";
+            return '0.00%';
         }
 
-        return number_format(($this->hits / ($this->hits + $this->misses)) * 100, 2) . "%";
+        return number_format(($this->hits / ($this->hits + $this->misses)) * 100, 2) . '%';
     }
 
     /**
@@ -80,9 +85,9 @@ class Statistics {
     public function getFormattedArray()
     {
         return array_merge($this->getAdditionalData(), array(
-            "Hits"          => $this->getHits(),
-            "Misses"        => $this->getMisses(),
-            "Helpfulness"   => $this->getHelpfulness()
+            'Hits' => $this->getHits(),
+            'Misses' => $this->getMisses(),
+            'Helpfulness' => $this->getHelpfulness()
         ));
     }
 }

@@ -38,7 +38,7 @@ If you aren't using Composer, register the namespace like so:
 
 $loader->registerNamespaces( array(
   //...
-  'Beryllium' => __DIR__.'/../vendor/bundles',
+  'Beryllium' => __DIR__ . '/../vendor/bundles',
   ) );
 ```
 
@@ -106,13 +106,13 @@ For a command line report of CacheClient statistics (assuming the cache client i
 Example Output:
 <pre>
 Instance: APC
- -------------- ------- 
-  Hits:          26      
-  Misses:        29      
-  Helpfulness:   47.27%  
+ -------------- -------
+  Hits:          26
+  Misses:        29
+  Helpfulness:   47.27%
   Uptime: 344976 seconds
   Open connections: 10
- -------------- ------- 
+ -------------- -------
 </pre>
 
 Help is available, although brief:

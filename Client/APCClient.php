@@ -12,12 +12,15 @@ use Beryllium\CacheBundle\Statistics;
  * @author Yaroslav Nechaev <mail@remper.ru>
  * @license See LICENSE.md
  */
-class APCClient implements CacheInterface, StatsInterface {
+class APCClient implements CacheInterface, StatsInterface
+{
     private $safe;
 
-    public function __construct() {
+    public function __construct()
+    {
         if (!extension_loaded('apc')) {
             $this->safe = false;
+
             return;
         }
 
@@ -64,8 +67,9 @@ class APCClient implements CacheInterface, StatsInterface {
      */
     public function delete($key)
     {
-        if (!$this->safe)
+        if (!$this->safe) {
             return false;
+        }
 
         return apc_delete($key);
     }
@@ -76,10 +80,11 @@ class APCClient implements CacheInterface, StatsInterface {
      */
     public function getStats()
     {
-        if (!$this->safe)
+        if (!$this->safe) {
             return array();
+        }
 
-        $apc_info = apc_cache_info("user", true);
-        return array("APC" => new Statistics($apc_info["num_hits"], $apc_info["num_misses"]));
+        $apc_info = apc_cache_info('user', true);
+        return array('APC' => new Statistics($apc_info['num_hits'], $apc_info['num_misses']));
     }
 }

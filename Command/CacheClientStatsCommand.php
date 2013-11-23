@@ -52,14 +52,14 @@ class CacheClientStatsCommand extends ContainerAwareCommand
 
         $statistics = $client->getStats();
         if (count($statistics) === 0) {
-            $output->writeln("<info>No instances detected</info>");
+            $output->writeln('<info>No instances detected</info>');
             return;
         }
 
         foreach ($statistics as $instance => $stats) {
-            $output->writeln("<info>Instance: " . $instance . "</info>");
+            $output->writeln('<info>Instance: ' . $instance . '</info>');
             $this->formatStatistics($stats)->render($output);
-            $output->writeln("");
+            $output->writeln('');
         }
     }
 
@@ -75,11 +75,12 @@ class CacheClientStatsCommand extends ContainerAwareCommand
         $formatter = $this->getHelperSet()->get('table');
         $result = array();
         foreach ($stats->getFormattedArray() as $key => $value) {
-            $result[] = array($key . ":", $value);
+            $result[] = array($key . ':', $value);
         }
+
         $formatter
             ->setLayout(TableHelper::LAYOUT_BORDERLESS)
-            ->setHorizontalBorderChar("-")
+            ->setHorizontalBorderChar('-')
             ->setRows($result);
 
         return $formatter;

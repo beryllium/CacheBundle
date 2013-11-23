@@ -16,10 +16,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Cache implements CacheInterface
 {
-    /** @var ContainerInterface $container */
+    /**
+     * @var ContainerInterface $container
+     */
     protected $container;
-    /** @var CacheInterface $client */
+
+    /**
+     * @var CacheInterface $client
+     */
     protected $client;
+
     protected $debug = false;
     protected $ttl = 300;
     protected $safe = false;

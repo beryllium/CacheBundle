@@ -12,9 +12,10 @@ use Beryllium\CacheBundle\Statistics;
  * @author Yaroslav Nechaev <mail@remper.ru>
  * @license See LICENSE.md
  */
-interface StatsInterface {
+interface StatsInterface
+{
     /**
      * @return Statistics[]
      */
     public function getStats();
-} 
+}

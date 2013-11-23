@@ -19,7 +19,7 @@ class AddClientPass implements CompilerPassInterface {
     public function process(ContainerBuilder $container)
     {
         $def = $container->findDefinition('be_cache');
-        $reference = new Reference("be_cache.client." . $container->getParameter("be_cache.client"));
+        $reference = new Reference('be_cache.client.' . $container->getParameter('be_cache.client'));
         $def->addMethodCall('setClient', array($reference));
     }
 }
