@@ -301,22 +301,12 @@ class MemcacheClient implements CacheClientInterface
     }
 
     /**
-     * Enable compression
+     * Set compression
      *
      * return self
      */
-    public function enableCompression()
+    public function setCompression($status)
     {
-        $this->mem->setOption(\Memcached::OPT_COMPRESSION, true);
-    }
-
-    /**
-     * Disable compression
-     *
-     * return self
-     */
-    public function diableCompression()
-    {
-        $this->mem->setOption(\Memcached::OPT_COMPRESSION, false);
+        $this->mem->setOption(\Memcached::OPT_COMPRESSION, $status);
     }
 }
