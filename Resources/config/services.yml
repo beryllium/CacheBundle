@@ -4,8 +4,8 @@ parameters:
     beryllium_cache.client.memcache.class: Memcached
     beryllium_cache.client.servers: { 127.0.0.1 : 11211 }
     beryllium_cache.client.prefix: ''
-    beryllium_cache.client.compression: true
     beryllium_cache.default_ttl: 300
+    beryllium_cache.client.compression: true
 
 services:
     beryllium_cache.client.memcache:

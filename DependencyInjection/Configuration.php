@@ -20,6 +20,23 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('beryllium_cache');
 
+        $rootNode
+            ->children()
+                ->scalarNode('prefix')
+                    ->defaultValue('')
+                    ->cannotBeEmpty()
+                ->end()
+                ->integerNode('default_ttl')
+                    ->defaultValue(300)
+                    ->cannotBeEmpty()
+                ->end()
+                ->booleanNode('compression')
+                    ->defaultValue(true)
+                    ->cannotBeEmpty()
+                ->end()
+            ->end()
+        ;
+
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
