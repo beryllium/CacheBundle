@@ -4,19 +4,19 @@
   "keywords": ["memcache","cache"],
   "type": "symfony-bundle",
   "license": "MIT",
-  "authors": 
+  "authors":
   [
-    { 
+    {
       "name": "Kevin Boyd (aka Beryllium)",
       "homepage": "http://www.beryllium.ca/"
     }
   ],
-  "require": 
+  "require":
   {
       "php": ">=5.3.0",
       "symfony/framework-bundle": "2.*"
   },
-  "autoload": 
+  "autoload":
   {
     "psr-0": { "Beryllium\\CacheBundle": "" }
   },

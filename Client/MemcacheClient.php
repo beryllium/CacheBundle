@@ -5,7 +5,7 @@ namespace Beryllium\CacheBundle\Client;
 use Beryllium\CacheBundle\CacheClientInterface;
 
 /**
- * Client interface for Memcache servers
+ * Client interface for Memcached servers
  *
  * @uses CacheClientInterface
  * @package
@@ -141,9 +141,8 @@ class MemcacheClient implements CacheClientInterface
     public function getMulti($keys)
     {
         if ($this->isSafe()) {
-            $key = $this->prependPrefix($keys);
 
-            return $this->mem->getMulti($key);
+            return $this->mem->getMulti($keys);
         }
 
         return false;
@@ -162,7 +161,7 @@ class MemcacheClient implements CacheClientInterface
     {
         if ($this->isSafe()) {
 
-            return $this->mem->set($key, $value, $this->compression, $ttl);
+            return $this->mem->set($key, $value, $ttl);
         }
 
         return false;
@@ -179,7 +178,7 @@ class MemcacheClient implements CacheClientInterface
     public function setMulti($values, $ttl)
     {
         if ($this->isSafe()) {
-            return $this->mem->set($values, $this->compression, $ttl);
+            return $this->mem->setMulti($values, $ttl);
         }
 
         return false;
@@ -312,7 +311,7 @@ class MemcacheClient implements CacheClientInterface
     }
 
     /**
-     * Enable compression
+     * Disable compression
      *
      * return self
      */
