@@ -32,12 +32,7 @@ class Cache implements CacheInterface
     public function __construct(CacheClientInterface $client = null)
     {
         if (!empty($client)) {
-            if (is_object($client) && ($client instanceof CacheClientInterface)) {
-                $this->client = $client;
-            }
-            else {
-                throw new \Exception('Invalid Cache Client Interface');
-            }
+            $this->setClient($client);
         }
     }
 
@@ -74,9 +69,9 @@ class Cache implements CacheInterface
      */
     public function setClient(CacheClientInterface $client)
     {
-        if (is_object($client) && ($client instanceof CacheClientInterface))
+        if (is_object($client) && ($client instanceof CacheClientInterface)) {
             $this->client = $client;
-        else {
+        } else {
             throw new \Exception('Invalid Cache Client Interface');
         }
     }
@@ -91,6 +86,10 @@ class Cache implements CacheInterface
     public function get($key)
     {
         if ($this->isSafe() && !empty($key)) {
+            if (is_array($key)) {
+                return $this->client->getMulti($key);
+            }
+
             return $this->client->get($key);
         }
 
@@ -118,19 +117,69 @@ class Cache implements CacheInterface
     }
 
     /**
+     * Add a set of values to the memcached
+     *
+     * @param array $values An array of pairs key-value.
+     * @param int $ttl Number of seconds for the value to be valid for
+     * @access public
+     * @return void
+     */
+    public function setMulti($values, $ttl)
+    {
+        return $this->client->setMulti($values, $ttl);
+    }
+
+    /**
      * Delete a key from the cache
      *
-     * @param string $key Unique key
+     * @param string|array $key Unique key or a bunch of unique keys
      * @access public
      * @return void
      */
     public function delete($key)
     {
-        if ($this->isSafe() && !empty($key)) {
+        if ($this->isSafe()) {
+            if (is_array($key)) {
+                return $this->client->deleteMulti($key);
+            }
+
             return $this->client->delete($key);
         }
+    }
 
-        return false;
+    /**
+     * Delete a set of values from the memcached
+     *
+     * @param array $regex Regular Expression
+     * @param array $time Time to wait before delete
+     * @access public
+     * @return void
+     */
+    public function deleteRegex($regex, $time = 0)
+    {
+        return $this->client->deleteMultiRegex($regex, $time);
+    }
+
+    /**
+     * Get all the cache keys
+     *
+     * @access public
+     * @return void
+     */
+    public function getKeys()
+    {
+        return $this->client->getKeys();
+    }
+
+    /**
+     * Clear all the cache
+     *
+     * @access public
+     * @return void
+     */
+    public function flush()
+    {
+        return $this->client->flush();
     }
 
     /**
