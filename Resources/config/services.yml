@@ -11,13 +11,13 @@ services:
       class: %beryllium_cache.client.memcache.class%
     beryllium_cache.client:
       class: %beryllium_cache.client.class%
-      arguments: [@beryllium_cache.client.memcache]
+      arguments: ['@beryllium_cache.client.memcache']
       calls:
         - [ addServers, [ %beryllium_cache.client.servers% ] ]
         - [ setPrefix, [ %beryllium_cache.client.prefix% ] ]
     beryllium_cache:
         class: %beryllium_cache.class%
         calls:
-          - [ setContainer, [ @service_container ] ]
-          - [ setClient, [ @beryllium_cache.client ] ]
+          - [ setContainer, [ '@service_container' ] ]
+          - [ setClient, [ '@beryllium_cache.client' ] ]
           - [ setTtl, [ %beryllium_cache.default_ttl% ] ]
