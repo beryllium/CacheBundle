@@ -22,6 +22,10 @@ class BerylliumCacheExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('beryllium_cache.client.prefix', $config['prefix']);
+        $container->setParameter('beryllium_cache.client.default_ttl', $config['default_ttl']);
+        $container->setParameter('beryllium_cache.client.compression', $config['compression']);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

@@ -5,7 +5,7 @@ namespace Beryllium\CacheBundle\Client;
 use Beryllium\CacheBundle\CacheClientInterface;
 
 /**
- * Client interface for Memcache servers
+ * Client interface for Memcached servers
  *
  * @uses CacheClientInterface
  * @package
@@ -15,31 +15,31 @@ use Beryllium\CacheBundle\CacheClientInterface;
  */
 class MemcacheClient implements CacheClientInterface
 {
+    const PREFIX_MAX_LENGTH = 128;
+
     protected $safe = false;
     protected $mem = null;
     protected $servers = array();
     protected $sockttl = 0.2;
-    protected $compression = false;
-    protected $prefix = '';
 
     /**
      * Constructs the cache client using an injected Memcache instance
      *
      * @access public
      */
-    public function __construct(\Memcache $memcache)
+    public function __construct(\Memcached $memcached)
     {
-        $this->mem = $memcache;
+        $this->mem = $memcached;
     }
 
     /**
-     * Add a server to the memcache pool.
+     * Add a server to the memcached pool.
      *
      * Does not probe server, does not set Safe to true.
      *
      * Should really be private, or modified to handle the probeServer action itself.
      *
-     * @param string $ip Location of memcache server
+     * @param string $ip Location of memcached server
      * @param int $port Optional: Port number (default: 11211)
      * @access public
      * @return void
@@ -52,7 +52,7 @@ class MemcacheClient implements CacheClientInterface
     }
 
     /**
-     * Add an array of servers to the memcache pool
+     * Add an array of servers to the memcached pool
      *
      * Uses ProbeServer to verify that the connection is valid.
      *
@@ -95,7 +95,7 @@ class MemcacheClient implements CacheClientInterface
      * flawed way to go about this.
      *
      * @param string $ip IP address (or hostname, possibly)
-     * @param int $port Port that memcache is running on
+     * @param int $port Port that memcached is running on
      * @access public
      * @return boolean True if the socket opens successfully, or false if it fails
      */
@@ -115,16 +115,16 @@ class MemcacheClient implements CacheClientInterface
     }
 
     /**
-     * Retrieve a value from memcache
+     * Retrieve a value from memcached
      *
-     * @param string|array $key Unique identifier or array of identifiers
+     * @param string $key Unique identifier
      * @access public
      * @return mixed Requested value, or false if an error occurs
      */
     public function get($key)
     {
         if ($this->isSafe()) {
-            $key = $this->prefix . $key;
+
             return $this->mem->get($key);
         }
 
@@ -132,7 +132,24 @@ class MemcacheClient implements CacheClientInterface
     }
 
     /**
-     * Add a value to the memcache
+     * Retrieve a set of values from memcached
+     *
+     * @param array $keys of Unique identifiers
+     * @access public
+     * @return mixed Requested value, or false if an error occurs
+     */
+    public function getMulti($keys)
+    {
+        if ($this->isSafe()) {
+
+            return $this->mem->getMulti($keys);
+        }
+
+        return false;
+    }
+
+    /**
+     * Add a value to the memcached
      *
      * @param string $key Unique key
      * @param mixed $value A value. I recommend a string, be it serialized or not - other values haven't been tested :)
@@ -143,15 +160,32 @@ class MemcacheClient implements CacheClientInterface
     public function set($key, $value, $ttl)
     {
         if ($this->isSafe()) {
-            $key = $this->prefix . $key;
-            return $this->mem->set($key, $value, $this->compression, $ttl);
+
+            return $this->mem->set($key, $value, $ttl);
         }
 
         return false;
     }
 
     /**
-     * Delete a value from the memcache
+     * Add a set of values to the memcached
+     *
+     * @param array $values An array of pairs key-value.
+     * @param int $ttl Number of seconds for the value to be valid for
+     * @access public
+     * @return void
+     */
+    public function setMulti($values, $ttl)
+    {
+        if ($this->isSafe()) {
+            return $this->mem->setMulti($values, $ttl);
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete a value from the memcached
      *
      * @param string $key Unique key
      * @access public
@@ -160,11 +194,77 @@ class MemcacheClient implements CacheClientInterface
     public function delete($key)
     {
         if ($this->isSafe()) {
-            $key = $this->prefix . $key;
+
             return $this->mem->delete($key, 0);
         }
 
         return false;
+    }
+
+    /**
+     * Delete a set of values from the memcached
+     *
+     * @param array $keys Unique key
+     * @param int $time Time to wait before delete
+     * @access public
+     * @return void
+     */
+    public function deleteMulti($keys, $time = 0)
+    {
+        if ($this->isSafe()) {
+
+            return $this->mem->deleteMulti($keys, $time);
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete a set of values from the memcached
+     *
+     * @param array $regex Regular Expression
+     * @param array $time Time to wait before delete
+     * @access public
+     * @return void
+     */
+    public function deleteMultiRegex($regex, $time = 0)
+    {
+        if ($this->isSafe()) {
+            $keys = $this->getKeys();
+            $matchingKeys = array();
+
+            foreach ($keys as $key) {
+                if (preg_match($regex, $key)) {
+                    $matchingKeys[] = $key;
+                }
+            }
+
+            return $this->mem->deleteMulti($matchingKeys, $time);
+        }
+
+        return false;
+    }
+
+    /**
+     * Get all the cache keys
+     *
+     * @access public
+     * @return void
+     */
+    public function getKeys()
+    {
+        return $this->mem->getAllKeys();
+    }
+
+    /**
+     * Clear all the cache
+     *
+     * @access public
+     * @return void
+     */
+    public function flush()
+    {
+        return $this->mem->flush();
     }
 
     /**
@@ -195,6 +295,18 @@ class MemcacheClient implements CacheClientInterface
      */
     public function setPrefix($prefix)
     {
-        $this->prefix = $prefix;
+        if (strlen($prefix) <= self::PREFIX_MAX_LENGTH) {
+            $this->mem->setOption(\Memcached::OPT_PREFIX_KEY, $prefix);
+        }
+    }
+
+    /**
+     * Set compression
+     *
+     * return self
+     */
+    public function setCompression($status)
+    {
+        $this->mem->setOption(\Memcached::OPT_COMPRESSION, $status);
     }
 }
