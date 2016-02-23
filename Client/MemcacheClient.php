@@ -123,12 +123,30 @@ class MemcacheClient implements CacheClientInterface
      */
     public function get($key)
     {
-        if ($this->isSafe()) {
-            $key = $this->prefix . $key;
+        if (!$this->isSafe()) {
+            return false;
+        }
+
+        if (empty($this->prefix)) {
             return $this->mem->get($key);
         }
 
-        return false;
+        if (!is_array($key)) {
+            return $this->mem->get($this->prefix . $key);
+        }
+
+        foreach ($key as $index => $value) {
+            $key[$index] = $this->prefix . $value;
+        }
+
+        $result = $this->mem->get($key);
+
+        foreach ($result as $index => $value) {
+            $result[substr($index, strlen($this->prefix))] = $value;
+            unset($result[$index]);
+        }
+
+        return $result;
     }
 
     /**
